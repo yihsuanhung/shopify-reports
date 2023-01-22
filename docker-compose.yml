@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mysqldb:
+    image: mysql:8
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_DATABASE=$DB_NAME
+    ports:
+      - 3306:3306
+    # volumes:
+    #   - db:/var/lib/mysql
+  app:
+    depends_on:
+      - 'mysqldb'
+    image: yihsuanhung/shopify-reports:0.0.1
+    build: ./shopify-reports
+    restart: unless-stopped
+    ports:
+      - 8888:8888
+    stdin_open: true
+    tty: true
+
+    # volumes:
+    # - /usr/local/kb/decoder/:/root/dbaegis/packages/server/config/decoder/
+    # - /usr/local/kb/correlator/:/root/dbaegis/packages/server/config/correlator/
